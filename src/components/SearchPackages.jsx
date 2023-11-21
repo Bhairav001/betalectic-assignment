@@ -1,6 +1,7 @@
 // SearchPackages.js
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 const SearchPackages = ({ addToFavorites }) => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -18,7 +19,6 @@ const SearchPackages = ({ addToFavorites }) => {
     };
 
    
-    // Debounce the search to avoid making too many API requests while typing
     const timeoutId = setTimeout(() => {
       searchPackages();
     }, 500);
@@ -63,12 +63,14 @@ const SearchPackages = ({ addToFavorites }) => {
           {searchResults.map((result) => (
             <li key={result.package.name} className="mb-2 p-2 border border-gray-300 rounded">
               <span className="mr-2">{result.package.name}</span> - {result.package.description}
+              <Link to={"/favorites"}>
               <button
                 className="ml-2 p-2 bg-green-500 text-white rounded hover:bg-green-700"
                 onClick={() => handleAddToFavorites(result.package.name, 'My favorite because...')}
               >
                 Add to Favorites
               </button>
+              </Link>
             </li>
           ))}
         </ul>

@@ -1,50 +1,69 @@
 // Favorites.js
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
-const Favorites = ({ favorites, removeFromFavorites }) => {
-  const [confirmDelete, setConfirmDelete] = useState(null);
+const Favorites = ({ favorites, removeFromFavorites, addToFavorites }) => {
+  const [showModal, setShowModal] = useState(false);
 
-  const handleRemoveFromFavorites = (packageName) => {
-    setConfirmDelete(packageName);
+  const handleAddToFavorites = (packageName, reason) => {
+    // Add validation logic here
+    addToFavorites({ packageName, reason });
+    setShowModal(true);
+
+    // Save favorites to local storage
+    localStorage.setItem('favorites', JSON.stringify([...favorites, { packageName, reason }]));
   };
 
-  const confirmDeletion = () => {
-    removeFromFavorites(confirmDelete);
-    setConfirmDelete(null);
+  const handleCloseModal = () => {
+    setShowModal(false);
   };
+
+  useEffect(() => {
+    // Retrieve favorites from local storage on mount
+    const storedFavorites = JSON.parse(localStorage.getItem('favorites')) || [];
+    addToFavorites(storedFavorites);
+  }, [addToFavorites]);
 
   return (
-    <div className="container mx-auto my-8 p-4 bg-gray-100">
-      <h2 className="text-xl font-bold mb-4">Your Favorites</h2>
-      <ul>
-        {favorites.map((favorite) => (
-          <li key={favorite.packageName} className="mb-2 p-2 border border-gray-300 rounded">
-            <span className="mr-2">{favorite.packageName}</span> - {favorite.reason}
-            <button
-              className="ml-2 p-2 bg-red-500 text-white rounded hover:bg-red-700"
-              onClick={() => handleRemoveFromFavorites(favorite.packageName)}
-            >
-              Remove
-            </button>
-          </li>
-        ))}
-      </ul>
+    <div>
+      <h2 className="text-2xl font-bold mb-4">Welcome to the favorite NPM packages</h2>
 
-      {confirmDelete && (
-        <div className="mt-4 p-2 border border-gray-300 rounded">
-          <p>Are you sure you want to remove {confirmDelete} from your favorites?</p>
+      {favorites.length === 0 ? (
+        <div className="text-center">
+          <p>You don't have any favs yet, please add.</p>
           <button
-            className="ml-2 p-2 bg-red-500 text-white rounded hover:bg-red-700"
-            onClick={confirmDeletion}
+            className="mt-4 p-2 bg-blue-500 text-white rounded hover:bg-blue-700"
+            onClick={() => setShowModal(true)}
           >
-            Yes
+            Add Fav
           </button>
-          <button
-            className="ml-2 p-2 bg-gray-500 text-white rounded hover:bg-gray-700"
-            onClick={() => setConfirmDelete(null)}
-          >
-            No
-          </button>
+        </div>
+      ) : (
+        <ul>
+          {favorites.map((favorite) => (
+            <li key={favorite.packageName} className="mb-2 p-2 border border-gray-300 rounded">
+              <span className="mr-2">{favorite.packageName}</span> - {favorite.reason}
+              <button
+                className="ml-2 p-2 bg-red-500 text-white rounded hover:bg-red-700"
+                onClick={() => removeFromFavorites(favorite.packageName)}
+              >
+                Remove
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+
+      {showModal && (
+        <div className="fixed inset-0 flex items-center justify-center">
+          <div className="bg-gray-800 bg-opacity-75 p-4 rounded">
+            <p className="text-white">Great! You have added a favorite NPM package.</p>
+            <button
+              className="mt-4 p-2 bg-blue-500 text-white rounded hover:bg-blue-700"
+              onClick={handleCloseModal}
+            >
+              Close
+            </button>
+          </div>
         </div>
       )}
     </div>
