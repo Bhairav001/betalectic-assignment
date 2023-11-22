@@ -1,13 +1,12 @@
 // SearchPackages.js
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const SearchPackages = ({ addToFavorites }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [searchResults, setSearchResults] = useState([]);
     const [favoriteReason, setFavoriteReason] = useState('');
-    const navigate = useNavigate();
 
     useEffect(() => {
         const searchPackages = async () => {
@@ -30,8 +29,12 @@ const SearchPackages = ({ addToFavorites }) => {
         // Add validation logic here
         addToFavorites({ packageName, reason });
 
-        // Navigate to the Favorites page
-        navigate('/');
+        // Save to local storage
+        const storedFavorites = JSON.parse(localStorage.getItem('favorites')) || [];
+        localStorage.setItem('favorites', JSON.stringify([...storedFavorites, { packageName, reason }]));
+
+        // Show success alert
+        alert('Success, your NPM package is stored in favorites!');
     };
 
     const handleInputChange = (e) => {
