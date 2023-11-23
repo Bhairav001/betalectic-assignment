@@ -1,6 +1,5 @@
 import React, { useState } from "react"
 import { Route, Routes } from "react-router-dom"
-import Example from "./Example"
 import SearchPackages from "./components/SearchPackages"
 import Favorites from "./components/Favorites"
 

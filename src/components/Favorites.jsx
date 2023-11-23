@@ -23,6 +23,7 @@ const Favorites = ({ favorites, removeFromFavorites, addToFavorites }) => {
   useEffect(() => {
     // Retrieve favorites from local storage on mount
     const storedFavorites = JSON.parse(localStorage.getItem('favorites')) || [];
+    console.log("allFav",storedFavorites)
     addToFavorites(storedFavorites);
   }, [addToFavorites]);
 
@@ -30,7 +31,7 @@ const Favorites = ({ favorites, removeFromFavorites, addToFavorites }) => {
     <div className="text-center mx-auto my-8 p-4 bg-gray-100">
       <h2 className="text-2xl font-bold mb-4 mt-10">Welcome to the favorite NPM packages</h2>
 
-      {favorites.length === 0 ? (
+    
         <div className="mb-8">
           <p>You don't have any favs yet, please add.</p>
           <button
@@ -40,7 +41,7 @@ const Favorites = ({ favorites, removeFromFavorites, addToFavorites }) => {
             Add Fav
           </button>
         </div>
-      ) : (
+    
         <div className="mt-4">
           <table className="min-w-full border border-gray-300">
             <thead>
@@ -78,7 +79,7 @@ const Favorites = ({ favorites, removeFromFavorites, addToFavorites }) => {
             </tbody>
           </table>
         </div>
-      )}
+    
     </div>
   );
 };
