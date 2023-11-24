@@ -7,7 +7,7 @@ const SearchPackages = ({ addToFavorites }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [searchResults, setSearchResults] = useState([]);
     const [favoriteReason, setFavoriteReason] = useState('');
-
+    const [data, setData] = useState([])
     useEffect(() => {
         const searchPackages = async () => {
             try {
@@ -31,12 +31,13 @@ const SearchPackages = ({ addToFavorites }) => {
 
         // Save to local storage
         const storedFavorites = JSON.parse(localStorage.getItem('favorites')) || [];
-        localStorage.setItem('favorites', JSON.stringify([...storedFavorites, { packageName, reason }]));
+        setData(packageName,reason)
+        localStorage.setItem('favorites', JSON.stringify(data));
 
         // Show success alert
         alert('Success, your NPM package is stored in favorites!');
     };
-
+console.log("myData",data)
     const handleInputChange = (e) => {
         setSearchTerm(e.target.value);
     };
